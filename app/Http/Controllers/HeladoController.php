@@ -4,10 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Middleware\PreventBackHistory;
 
 class HeladoController extends Controller
 {
     // Datos de ejemplo (luego se reemplazarán con base de datos)
+    public function __construct()
+    {
+        // Versión corregida del middleware
+        $this->middleware(function ($request, $next) {
+            $response = $next($request);
+            
+            return $response->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Sat, 01 Jan 2000 00:00:00 GMT'
+            ]);
+        });
+    }
     private $helados = [
         ['id' => 1, 'nombre' => 'Cono Clásico', 'precio' => 3.50, 'imagen' => 'cono-clasico.jpg', 'descripcion' => 'Delicioso cono con dos bolas de helado y topping a elección'],
         ['id' => 2, 'nombre' => 'Sundae de Chocolate', 'precio' => 4.50, 'imagen' => 'sundae-chocolate.jpg', 'descripcion' => 'Helado de vainilla con salsa de chocolate caliente y crema batida'],

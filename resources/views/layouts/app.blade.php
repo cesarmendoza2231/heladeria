@@ -68,6 +68,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contacto') }}">Contacto</a>
                     </li>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                        </button>
+                     
+                    </form>
                 </ul>
             </div>
         </div>
@@ -89,8 +96,36 @@
             </div>
         </div>
     </footer>
+ <!-- Script para bloquear navegación -->
+ @auth
+    <script>
+    // Solución mejorada para prevenir navegación con flechas
+    document.addEventListener('DOMContentLoaded', function() {
+        // Evitar que se almacene en caché
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
 
+        // Bloquear flechas de navegación
+        history.pushState(null, null, location.href);
+        window.onpopstate = function(event) {
+            history.go(1);
+            window.location.href = "{{ route('inicio') }}";
+        };
+        
+        // Forzar recarga si detecta retroceso
+        setTimeout(function(){
+            if (performance.navigation.type === 2) {
+                window.location.reload();
+            }
+        }, 1000);
+    });
+    </script>
+    @endauth
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

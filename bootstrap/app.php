@@ -16,3 +16,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+    $app->routeMiddleware([
+        'prevent.back' => App\Http\Middleware\PreventBackHistory::class,
+    ]);

@@ -22,7 +22,7 @@
             <a href="{{ route('contacto') }}" class="btn btn-outline-primary mt-3">Conoce más sobre nosotros</a>
         </div>
         <div class="col-lg-6">
-            <img src="images/helado-historia.jpg" alt="Nuestra historia" class="img-fluid rounded shadow">
+            <img src="{{ asset('images/helado-historia.jpg') }}" alt="Nuestra historia" class="img-fluid rounded shadow">
         </div>
     </div>
 </div>
@@ -34,7 +34,7 @@
             @foreach($destacados as $helado)
             <div class="col-md-4 mb-4">
                 <div class="card helado-card h-100">
-                    <img src="/images/{{ $helado['imagen'] }}" class="card-img-top" alt="{{ $helado['nombre'] }}">
+                    <img src="{{ asset('images/' . $helado['imagen']) }}" class="card-img-top" alt="{{ $helado['nombre'] }}">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ $helado['nombre'] }}</h5>
                         <p class="card-text">{{ $helado['descripcion'] }}</p>

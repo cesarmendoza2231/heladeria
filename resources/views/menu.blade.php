@@ -3,7 +3,7 @@
 @section('title', 'Menú')
 
 @section('content')
-<div class="hero-section" style="background-image: url('/images/menu-bg.jpg');">
+<div class="hero-section" style="background-image: url('{{ asset('images/menu-bg.jpg') }}');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Nuestro Menú</h1>
         <p class="lead">Deliciosas opciones para todos los gustos</p>
@@ -31,7 +31,7 @@
         <div class="col-lg-3 col-md-6 mb-4">
             <div class="card helado-card h-100">
                 <div class="position-relative">
-                    <img src="/images/{{ $helado['imagen'] }}" class="card-img-top" alt="{{ $helado['nombre'] }}">
+                    <img src="{{ asset('images/' . $helado['imagen']) }}" class="card-img-top" alt="{{ $helado['nombre'] }}">
                     <div class="position-absolute top-0 end-0 bg-primary text-white px-2 py-1 rounded-bl">
                         ${{ number_format($helado['precio'], 2) }}
                     </div>
