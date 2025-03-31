@@ -1,0 +1,102 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+/* Tus estilos personalizados aquí */
+:root {
+    --helado-primary: #ff6b6b;
+    --helado-secondary: #ffb8b8;
+    --helado-light: #fff5f5;
+}
+
+body {
+    background-color: var(--helado-light);
+    font-family: 'Comic Neue', cursive;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/helado-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    margin-bottom: 30px;
+}
+
+.helado-card {
+    transition: transform 0.3s;
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.helado-card:hover {
+    transform: translateY(-10px);
+}
+
+.btn-helado {
+    background-color: var(--helado-primary);
+    color: white;
+    border-radius: 50px;
+    padding: 10px 25px;
+    border: none;
+}
+
+.btn-helado:hover {
+    background-color: #ff5252;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Auth Styles */
+.auth-container {
+    position: relative;
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 192, 203, 0.3);
+    z-index: 0;
+}
+
+.auth-card {
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-card {
+    animation: fadeIn 0.6s ease-out forwards;
+}
