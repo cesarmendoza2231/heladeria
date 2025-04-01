@@ -150,7 +150,7 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1 class="login-title"><i class="fas fa-ice-cream icecream-icon"></i>Helados Artesanales</h1>
+            <h1 class="login-title"><i class="fas fa-ice-cream icecream-icon"></i>Helados Delicia</h1>
             <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
         </div>
         

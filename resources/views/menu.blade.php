@@ -3,7 +3,7 @@
 @section('title', 'Menú')
 
 @section('content')
-<div class="hero-section" style="background-image: url('{{ asset('images/menu-bg.jpg') }}');">
+<div class="hero-section" style="background-image: url('{{ asset('images/menu2-bg.jpg') }}');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Nuestro Menú</h1>
         <p class="lead">Deliciosas opciones para todos los gustos</p>
@@ -17,11 +17,13 @@
             <p>Explora nuestra variedad de helados artesanales. Cada uno preparado con ingredientes frescos y mucho amor.</p>
         </div>
         <div class="col-md-6 text-md-end">
-            <div class="input-group mb-3 w-75 ms-md-auto">
-                <input type="text" class="form-control" placeholder="Buscar helado..." id="buscarHelado">
-                <button class="btn btn-outline-primary" type="button">
-                    <i class="fa fa-search"></i>
-                </button>
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="input-group mb-3 w-75 me-3">
+                    <input type="text" class="form-control" placeholder="Buscar helado..." id="buscarHelado">
+                    <button class="btn btn-outline-primary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -41,14 +43,29 @@
                     <p class="card-text">{{ $helado['descripcion'] }}</p>
                 </div>
                 <div class="card-footer bg-transparent border-0">
-                    <button class="btn btn-helado w-100">
-                        <i class="fa fa-shopping-cart"></i> Añadir al carrito
-                    </button>
+                    <form action="{{ route('agregar.carrito', $helado['id']) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-helado w-100">
+                            <i class="fa fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
         @endforeach
     </div>
+</div>
+
+<!-- Carrito flotante en la parte inferior -->
+<div class="fixed-bottom d-flex justify-content-center mb-4">
+    <a href="{{ route('carrito') }}" class="btn btn-primary position-relative">
+        <i class="fa fa-shopping-cart"></i>
+        @if(session('carrito'))
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ array_sum(array_column(session('carrito'), 'cantidad')) }}
+            </span>
+        @endif
+    </a>
 </div>
 
 @section('scripts')
@@ -72,4 +89,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+<style>
+/* Estilo para el botón del carrito en la parte inferior */
+.fixed-bottom {
+    z-index: 1000;
+    position: fixed;
+    bottom: 30px; /* Ajusta la distancia desde la parte inferior si es necesario */
+}
+
+.btn-primary {
+    font-size: 1.25rem;
+    padding: 12px 20px;
+    border-radius: 50px;
+}
+</style>
 @endsection

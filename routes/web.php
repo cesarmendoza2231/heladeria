@@ -23,3 +23,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/promociones', [HeladoController::class, 'promociones'])->name('promociones');
     Route::post('/contacto', [HeladoController::class, 'enviarContacto'])->name('enviar.contacto');
 });
+
+
+
+
+
+// Rutas del carrito
+Route::get('/carrito', [HeladoController::class, 'mostrarCarrito'])->name('carrito');
+Route::post('/agregar-carrito/{id}', [HeladoController::class, 'agregarAlCarrito'])->name('agregar.carrito');
+Route::patch('/actualizar-carrito', [HeladoController::class, 'actualizarCarrito'])->name('actualizar.carrito');
+Route::delete('/eliminar-carrito/{id}', [HeladoController::class, 'eliminarDelCarrito'])->name('eliminar.carrito');
+Route::post('/vaciar-carrito', [HeladoController::class, 'vaciarCarrito'])->name('vaciar.carrito');

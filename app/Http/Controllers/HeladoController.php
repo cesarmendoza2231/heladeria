@@ -23,7 +23,7 @@ class HeladoController extends Controller
         });
     }
     private $helados = [
-        ['id' => 1, 'nombre' => 'Cono Clásico', 'precio' => 3.50, 'imagen' => 'cono-clasico.jpg', 'descripcion' => 'Delicioso cono con dos bolas de helado y topping a elección'],
+        ['id' => 1, 'nombre' => 'Cono Clásico', 'precio' => 3.50, 'imagen' => 'cono-clasico2.jpg', 'descripcion' => 'Delicioso cono con dos bolas de helado y topping a elección'],
         ['id' => 2, 'nombre' => 'Sundae de Chocolate', 'precio' => 4.50, 'imagen' => 'sundae-chocolate.jpg', 'descripcion' => 'Helado de vainilla con salsa de chocolate caliente y crema batida'],
         ['id' => 3, 'nombre' => 'Banana Split', 'precio' => 5.75, 'imagen' => 'banana-split.jpg', 'descripcion' => 'Plátano partido con tres bolas de helado, salsa de chocolate, fresa y piña'],
         ['id' => 4, 'nombre' => 'Helado en Copa', 'precio' => 4.00, 'imagen' => 'copa-helado.jpg', 'descripcion' => 'Dos bolas de helado en copa de cristal con toppings'],
@@ -98,4 +98,78 @@ class HeladoController extends Controller
     {
         return view('promociones', ['promociones' => $this->promociones]);
     }
+
+
+
+
+    // Métodos para el carrito
+    public function mostrarCarrito()
+    {
+        $carrito = session()->get('carrito', []);
+        $total = $this->calcularTotal($carrito);
+        return view('carrito', compact('carrito', 'total'));
+    }
+
+    public function agregarAlCarrito(Request $request, $id)
+    {
+        $helado = collect($this->helados)->firstWhere('id', $id);
+        
+        if(!$helado) {
+            return redirect()->back()->with('error', 'Helado no encontrado');
+        }
+
+        $carrito = session()->get('carrito', []);
+        
+        if(isset($carrito[$id])) {
+            $carrito[$id]['cantidad']++;
+        } else {
+            $carrito[$id] = [
+                "nombre" => $helado['nombre'],
+                "cantidad" => 1,
+                "precio" => $helado['precio'],
+                "imagen" => $helado['imagen']
+            ];
+        }
+
+        session()->put('carrito', $carrito);
+        return redirect()->back()->with('success', 'Helado agregado al carrito');
+    }
+
+    public function actualizarCarrito(Request $request)
+    {
+        if($request->id && $request->cantidad){
+            $carrito = session()->get('carrito');
+            $carrito[$request->id]["cantidad"] = $request->cantidad;
+            session()->put('carrito', $carrito);
+            return response()->json(['success' => true]);
+        }
+    }
+
+    public function eliminarDelCarrito(Request $request, $id)
+    {
+        $carrito = session()->get('carrito');
+        
+        if(isset($carrito[$id])) {
+            unset($carrito[$id]);
+            session()->put('carrito', $carrito);
+        }
+
+        return redirect()->back()->with('success', 'Helado eliminado del carrito');
+    }
+
+    public function vaciarCarrito()
+    {
+        session()->forget('carrito');
+        return redirect()->back()->with('success', 'Carrito vaciado correctamente');
+    }
+
+    private function calcularTotal($carrito)
+    {
+        $total = 0;
+        foreach($carrito as $item) {
+            $total += $item['precio'] * $item['cantidad'];
+        }
+        return $total;
+    }
+
 }

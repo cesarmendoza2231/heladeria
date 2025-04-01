@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('name'); // Nombre completo
+            $table->string('name'); 
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
