@@ -3,7 +3,7 @@
 @section('title', 'Nuestros Sabores')
 
 @section('content')
-<div class="hero-section" style="background-image: url('/images/sabores-bg.jpg');">
+<div class="hero-section" style="background-image: url('https://images.pexels.com/photos/5061197/pexels-photo-5061197.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Nuestros Sabores</h1>
         <p class="lead">Descubre nuestra amplia variedad de sabores artesanales</p>

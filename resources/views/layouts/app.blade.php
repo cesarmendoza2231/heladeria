@@ -39,6 +39,31 @@
             color: red;
             text-decoration: line-through;
         }
+        /* Nuevos estilos para el dropdown de usuario */
+        .user-dropdown {
+            margin-left: 15px;
+        }
+        .user-dropdown .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+        .user-dropdown .dropdown-toggle::after {
+            margin-left: 5px;
+        }
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: #4CAF50;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +77,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('inicio') }}">Inicio</a>
                     </li>
@@ -68,14 +93,32 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contacto') }}">Contacto</a>
                     </li>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
-                        </button>
-                     
-                    </form>
                 </ul>
+                
+                <div class="d-flex align-items-center">
+                    @auth
+                    <div class="dropdown user-dropdown">
+                        <a class="dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            {{ Auth::user()->name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{{ route('perfil.edit') }}"><i class="fas fa-user-circle me-2"></i>Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="px-3 py-2">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link p-0 text-decoration-none w-100 text-start">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
@@ -83,6 +126,7 @@
     <!-- Contenido principal -->
     <main>
         @yield('content')
+        @yield('scripts')
     </main>
 
     <!-- Footer -->
@@ -96,26 +140,23 @@
             </div>
         </div>
     </footer>
- <!-- Script para bloquear navegación -->
- @auth
+
+    <!-- Script para bloquear navegación -->
+    @auth
     <script>
-    // Solución mejorada para prevenir navegación con flechas
     document.addEventListener('DOMContentLoaded', function() {
-        // Evitar que se almacene en caché
         window.onpageshow = function(event) {
             if (event.persisted) {
                 window.location.reload();
             }
         };
 
-        // Bloquear flechas de navegación
         history.pushState(null, null, location.href);
         window.onpopstate = function(event) {
             history.go(1);
             window.location.href = "{{ route('inicio') }}";
         };
         
-        // Forzar recarga si detecta retroceso
         setTimeout(function(){
             if (performance.navigation.type === 2) {
                 window.location.reload();
@@ -126,6 +167,5 @@
     @endauth
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

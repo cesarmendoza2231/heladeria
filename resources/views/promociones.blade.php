@@ -3,7 +3,7 @@
 @section('title', 'Promociones')
 
 @section('content')
-<div class="hero-section" style="background-image: url('/images/promociones-bg.jpg');">
+<div class="hero-section" style="background-image: url('https://images.pexels.com/photos/31427183/pexels-photo-31427183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Promociones Especiales</h1>
         <p class="lead">Aprovecha nuestras increíbles ofertas y combos</p>

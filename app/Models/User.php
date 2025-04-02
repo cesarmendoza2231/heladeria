@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -20,7 +21,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password',  'telefono', 'direccion'
+
     ];
 
     /**
@@ -45,4 +47,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function compras(): HasMany
+    {
+        return $this->hasMany(Compra::class);
+    }
+    public function carritos(): HasMany
+{
+    return $this->hasMany(\App\Models\Carrito::class);
+}
+    
 }

@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Middleware\PreventBackHistory;
+use Illuminate\Support\Facades\Auth; // Añade esta línea
+use App\Models\Helado;
+use App\Models\Sabor;
+use App\Models\Promocion;
 
 class HeladoController extends Controller
 {
-    // Datos de ejemplo (luego se reemplazarán con base de datos)
     public function __construct()
     {
-        // Versión corregida del middleware
         $this->middleware(function ($request, $next) {
             $response = $next($request);
             
@@ -22,50 +23,34 @@ class HeladoController extends Controller
             ]);
         });
     }
-    private $helados = [
-        ['id' => 1, 'nombre' => 'Cono Clásico', 'precio' => 3.50, 'imagen' => 'cono-clasico2.jpg', 'descripcion' => 'Delicioso cono con dos bolas de helado y topping a elección'],
-        ['id' => 2, 'nombre' => 'Sundae de Chocolate', 'precio' => 4.50, 'imagen' => 'sundae-chocolate.jpg', 'descripcion' => 'Helado de vainilla con salsa de chocolate caliente y crema batida'],
-        ['id' => 3, 'nombre' => 'Banana Split', 'precio' => 5.75, 'imagen' => 'banana-split.jpg', 'descripcion' => 'Plátano partido con tres bolas de helado, salsa de chocolate, fresa y piña'],
-        ['id' => 4, 'nombre' => 'Helado en Copa', 'precio' => 4.00, 'imagen' => 'copa-helado.jpg', 'descripcion' => 'Dos bolas de helado en copa de cristal con toppings'],
-    ];
-    
-    private $sabores = [
-        ['id' => 1, 'nombre' => 'Vainilla', 'disponible' => true, 'popularidad' => 5],
-        ['id' => 2, 'nombre' => 'Chocolate', 'disponible' => true, 'popularidad' => 5],
-        ['id' => 3, 'nombre' => 'Fresa', 'disponible' => true, 'popularidad' => 4],
-        ['id' => 4, 'nombre' => 'Menta', 'disponible' => false, 'popularidad' => 3],
-        ['id' => 5, 'nombre' => 'Cookies & Cream', 'disponible' => true, 'popularidad' => 5],
-        ['id' => 6, 'nombre' => 'Dulce de Leche', 'disponible' => true, 'popularidad' => 4],
-        ['id' => 7, 'nombre' => 'Limón', 'disponible' => true, 'popularidad' => 3],
-        ['id' => 8, 'nombre' => 'Mango', 'disponible' => true, 'popularidad' => 4],
-    ];
-    
-    private $promociones = [
-        ['id' => 1, 'nombre' => 'Martes de Helado', 'descripcion' => '2x1 en todos los conos los martes', 'valido_hasta' => '2023-12-31'],
-        ['id' => 2, 'nombre' => 'Happy Hour', 'descripcion' => 'Descuento del 20% de 4pm a 6pm', 'valido_hasta' => '2023-12-31'],
-        ['id' => 3, 'nombre' => 'Combo Familiar', 'descripcion' => '4 helados grandes por el precio de 3', 'valido_hasta' => '2023-12-31'],
-    ];
 
     public function inicio()
     {
-        $destacados = array_slice($this->helados, 0, 3);
+        $destacados = Helado::where('destacado', true)
+                          ->where('stock', '>', 0)
+                          ->take(3)
+                          ->get();
+        
         return view('inicio', compact('destacados'));
     }
 
     public function menu()
     {
-        return view('menu', ['helados' => $this->helados]);
-    }
+        $helados = Helado::where('stock', '>', 0)->get();
+    $carrito = session()->get('carrito', []);
+    $totalItems = count($carrito);
+    
+    return view('menu', compact('helados', 'totalItems'));}
 
     public function sabores()
     {
-        $saboresDisponibles = array_filter($this->sabores, function($sabor) {
-            return $sabor['disponible'];
-        });
+        $saboresDisponibles = Sabor::where('disponible', true)
+                                 ->orderBy('popularidad', 'desc')
+                                 ->get();
         
-        $saboresNoDisponibles = array_filter($this->sabores, function($sabor) {
-            return !$sabor['disponible'];
-        });
+        $saboresNoDisponibles = Sabor::where('disponible', false)
+                                   ->orderBy('nombre')
+                                   ->get();
         
         return view('sabores', compact('saboresDisponibles', 'saboresNoDisponibles'));
     }
@@ -89,87 +74,15 @@ class HeladoController extends Controller
                         ->withInput();
         }
         
-        
         return redirect()->route('contacto')
                     ->with('success', 'Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.');
     }
 
     public function promociones()
-    {
-        return view('promociones', ['promociones' => $this->promociones]);
-    }
-
-
-
-
-    // Métodos para el carrito
-    public function mostrarCarrito()
-    {
-        $carrito = session()->get('carrito', []);
-        $total = $this->calcularTotal($carrito);
-        return view('carrito', compact('carrito', 'total'));
-    }
-
-    public function agregarAlCarrito(Request $request, $id)
-    {
-        $helado = collect($this->helados)->firstWhere('id', $id);
-        
-        if(!$helado) {
-            return redirect()->back()->with('error', 'Helado no encontrado');
-        }
-
-        $carrito = session()->get('carrito', []);
-        
-        if(isset($carrito[$id])) {
-            $carrito[$id]['cantidad']++;
-        } else {
-            $carrito[$id] = [
-                "nombre" => $helado['nombre'],
-                "cantidad" => 1,
-                "precio" => $helado['precio'],
-                "imagen" => $helado['imagen']
-            ];
-        }
-
-        session()->put('carrito', $carrito);
-        return redirect()->back()->with('success', 'Helado agregado al carrito');
-    }
-
-    public function actualizarCarrito(Request $request)
-    {
-        if($request->id && $request->cantidad){
-            $carrito = session()->get('carrito');
-            $carrito[$request->id]["cantidad"] = $request->cantidad;
-            session()->put('carrito', $carrito);
-            return response()->json(['success' => true]);
-        }
-    }
-
-    public function eliminarDelCarrito(Request $request, $id)
-    {
-        $carrito = session()->get('carrito');
-        
-        if(isset($carrito[$id])) {
-            unset($carrito[$id]);
-            session()->put('carrito', $carrito);
-        }
-
-        return redirect()->back()->with('success', 'Helado eliminado del carrito');
-    }
-
-    public function vaciarCarrito()
-    {
-        session()->forget('carrito');
-        return redirect()->back()->with('success', 'Carrito vaciado correctamente');
-    }
-
-    private function calcularTotal($carrito)
-    {
-        $total = 0;
-        foreach($carrito as $item) {
-            $total += $item['precio'] * $item['cantidad'];
-        }
-        return $total;
-    }
-
+{
+    // Retorna una colección vacía temporalmente
+    $promociones = collect([]);
+    
+    return view('promociones', compact('promociones'));
+}
 }

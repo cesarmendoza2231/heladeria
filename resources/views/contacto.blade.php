@@ -3,7 +3,7 @@
 @section('title', 'Contacto')
 
 @section('content')
-<div class="hero-section" style="background-image: url('/images/contacto-bg.jpg');">
+<div class="hero-section" style="background-image: url('https://images.pexels.com/photos/16046784/pexels-photo-16046784/free-photo-of-comida-dulce-cajas-fotografia-de-comida.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Contáctanos</h1>
         <p class="lead">Estamos aquí para responder tus preguntas y escuchar tus sugerencias</p>
