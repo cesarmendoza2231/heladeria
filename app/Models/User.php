@@ -55,5 +55,8 @@ class User extends Authenticatable
 {
     return $this->hasMany(\App\Models\Carrito::class);
 }
-    
+public function comprobantes()
+{
+    return $this->hasMany(Comprobante::class);
+}
 }

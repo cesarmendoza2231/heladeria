@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<div class="hero-section" style="background-image: url('{{ asset('https://images.pexels.com/photos/5060294/pexels-photo-5060294.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') }}');">
+<div class="hero-section" style="background-image: url('{{ asset('https://images.pexels.com/photos/31416136/pexels-photo-31416136/free-photo-of-seleccion-de-postres-japoneses-de-matcha-en-kioto.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') }}');">
     <div class="container text-center">
         <h1 class="display-4 fw-bold">Nuestro Menú</h1>
         <p class="lead">Deliciosas opciones para todos los gustos</p>

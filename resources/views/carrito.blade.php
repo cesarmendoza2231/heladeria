@@ -58,9 +58,12 @@
             
             <div class="text-end">
                 <h4 class="mb-3">Total: <span class="text-primary">${{ number_format($total, 2) }}</span></h4>
-                <a href="#" class="btn btn-primary btn-lg">
-                    <i class="fas fa-credit-card me-2"></i>Pagar Ahora
-                </a>
+                <form action="{{ route('recibo.generar') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-credit-card me-2"></i>Pagar Ahora
+                    </button>
+                </form>
             </div>
         </div>
     @endif

@@ -7,10 +7,15 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Kernel;
+use App\Http\Controllers\ReciboController;
 
 // Página principal (login)
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 
+//Route::post('/generar-recibo', [ReciboController::class, 'generarRecibo'])->name('recibo.generar');
+Route::post('/generar-recibo', [ReciboController::class, 'generarRecibo'])
+     ->name('recibo.generar')
+     ->middleware('auth');
 // Autenticación
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

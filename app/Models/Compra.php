@@ -23,8 +23,14 @@ class Compra extends Model
      * @return BelongsToMany
      */
     public function helados()
-    {
-        return $this->belongsToMany(Helado::class)
-                   ->withPivot('cantidad', 'precio_unitario');
-    }
+{
+    return $this->belongsToMany(Helado::class)
+                ->withPivot('cantidad', 'precio_unitario')
+                ->withTimestamps();
+}
+
+public function items()
+{
+    return $this->hasMany(Carrito::class);
+}
 }

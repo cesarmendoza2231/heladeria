@@ -13,23 +13,17 @@ use App\Models\Compra;
 class PerfilController extends Controller
 {
     public function edit()
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        
-        // Opción 1 (recomendada si la relación está definida)
-        $compras = $user->compras()
-                       ->with('helados')
-                       ->orderBy('created_at', 'desc')
-                       ->paginate(5);
-        
-        // Opción 2 (alternativa si persisten los errores)
-        // $compras = Compra::where('user_id', $user->id)
-        //                 ->with('helados')
-        //                 ->orderBy('created_at', 'desc')
-        //                 ->paginate(5);
-                        
-        return view('auth.perfil', compact('user', 'compras'));
+    {/** @var \App\Models\User $user */
+    $user = Auth::user();
+    
+    $compras = $user->compras()
+                   ->with(['helados' => function($query) {
+                       $query->select('id', 'nombre', 'imagen');
+                   }])
+                   ->orderBy('created_at', 'desc')
+                   ->paginate(5, ['id', 'total', 'estado', 'created_at']);
+                   
+    return view('auth.perfil', compact('user', 'compras'));
     }
 
     public function update(Request $request)
